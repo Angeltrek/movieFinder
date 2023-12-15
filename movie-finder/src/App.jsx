@@ -1,7 +1,8 @@
 import './App.css'
 import { useMovies } from './hooks/useMovies';
 import {Movies} from './components/movies'
-import {useEffect, useState, useRef} from 'react'
+import {useEffect, useState, useRef, useCallback} from 'react'
+import debounce from 'just-debounce-it'
 // useRef is a hook used to create a mutable object 
 // that persists across renders of a functional component
 
@@ -38,16 +39,27 @@ function useSearch() {
 }
 
 function App() {
+  const [sort, setSort]  = useState(false)
   const {search, updateSearch, error} = useSearch()
-  const {movies, getMovies, loading} = useMovies({search})
+  const {movies, getMovies, loading} = useMovies({search, sort})
+
+  const debounceGetMovies = useCallback(debounce(search => {
+    getMovies({search})
+  }, 300), [getMovies])
 
   const handleSumbit = (event) => {
     event.preventDefault()
-    getMovies()
+    getMovies(search)
+  }
+
+  const handleSort = () => {
+    setSort(!sort)
   }
 
   const handleChange = (event) => {
-    updateSearch(event.target.value)
+    const newSearch = event.target.value
+    updateSearch(newSearch)
+    debounceGetMovies(newSearch)
   }
 
   return (
@@ -60,6 +72,7 @@ function App() {
           borderColor: error? 'red':'transparent'}} 
           onChange={handleChange} name='query' placeholder='Avengers, Toy Story, Star Wars...' />
           <button type='submit'>Search</button>
+          <input type="checkbox" onChange={handleSort} checked={sort} />
         </form>
         {error && <p style={{color: 'red'}}>{error}</p>}
       </header>
