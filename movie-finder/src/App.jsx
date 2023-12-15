@@ -1,15 +1,14 @@
 import './App.css'
-import responseMovies from './mocks/with-results.json'
+import { useMovies } from './hooks/useMovies';
 import {Movies} from './components/movies'
-import withoutResults from './mocks/no-results.json'
 
 function App() {
 
-  const movies = responseMovies.Search;
+  const {movies} = useMovies();
 
   return (
     <div className='page'>
-      
+
       <header>
         <h1>Movie Finder</h1>
         <form className='form'>
