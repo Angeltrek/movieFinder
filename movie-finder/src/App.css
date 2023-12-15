@@ -9,4 +9,24 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+}
+
+.movies {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.movie {
+    text-align: center;
+}
+
+.movie h3 {
+    font-size: 16px;
+}
+
+.movie h3, .movie p {
+    margin: 0;
 }
